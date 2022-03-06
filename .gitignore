@@ -2,6 +2,7 @@ obj/
 bin/
 data/
 Makefile
+*~
 *.swp
 *.o
 *.out

@@ -1,5 +1,5 @@
 #include "text_train.h"
-#include "../text_clean/text_clean.h"
+#include "text_clean.h"
 /******************************************************************************/
 static sqlite3 *db;
 /******************************************************************************/
@@ -257,65 +257,7 @@ int Train_Tagger(const char *filepath)
   fclose(text_file);
   return 55;
 }
-/******************************************************************************
-int Train_Tagger(const char *filepath)
-{
-  Open_Database("db/training_dict_TEST.db");
-  
-  FILE *text_file = fopen(filepath, "r");
-    
-  char sentence[MAX_TEXT_LEN] = {0};
-    
-  Execute_SQL("BEGIN TRANSACTION");
-
-  while (fgets(sentence, MAX_TEXT_LEN-1, text_file))
-  {
-	Constrain_Text_Length(sentence, MAX_TEXT_LEN);
-	
-    int   sentence_offset        = 0;
-	char *sentence_ptr           = sentence;
-    char  tagged_text[BUF_SIZE]  = {0};
-	char  prev_tag[MAX_TAG_LEN]  = {'X'};
-	
-	while (sscanf(sentence_ptr, "%30s%n", tagged_text, &sentence_offset) == 1)
-	{
-      Constrain_Text_Length(tagged_text, BUF_SIZE);
-
-      if (Is_End_Of_Sentence(tagged_text))
-      {
-		char *current_tag = "X";
-        Increment_Count("\"transition_count\"","\"tag\"", "\"next_tag\"", prev_tag, current_tag);
-		Increment_Total("\"transition_count\"","\"tag\"", prev_tag);
-        Copy_Text(prev_tag, current_tag);
-	  }  
-      else if (Is_Tagged_Word(tagged_text))
-	  {
-	    char word[BUF_SIZE]        = {0};
-        char current_tag[BUF_SIZE] = {0};
-            
-	    Split_Token(tagged_text, word, current_tag);
-           
-        if (Is_Clean_Word(word) && Is_Clean_Tag(current_tag))
-	    {
-		  Add_Word_To_Dict(word);
-	      Increment_Count("\"emission_count\"", "\"word\"", "\"tag\"", word, current_tag);
-		  Increment_Total("\"emission_count\"", "\"word\"", word);
-		      
-		  Add_Tag_To_Dict(prev_tag);
-		  Increment_Count("\"transition_count\"","\"tag\"", "\"next_tag\"", prev_tag, current_tag);
-		  Increment_Total("\"transition_count\"","\"tag\"", prev_tag);
-          Copy_Text(prev_tag, current_tag);
-        }
-      }
-      sentence_ptr += sentence_offset;
-    }
-  }
-    Execute_SQL("END TRANSACTION");
-    Close_Database();
-    fclose(text_file);
-  return 55;
-}
-******************************************************************************/
+/******************************************************************************/
 int Is_Clean_Word(char *word)
 {
   if (word != NULL               &&

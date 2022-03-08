@@ -1,5 +1,5 @@
 #include "snow_stem.h"
-#include "../text_clean/text_clean.h"
+#include "text_clean.h"
 #include <stdio.h>
 
 int main(int argc, char **argv)

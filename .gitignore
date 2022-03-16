@@ -1,11 +1,9 @@
 obj/
 bin/
 data/
-Makefile
 *~
 *.swp
 *.o
 *.out
 *.exe
 *.db
-*.txt

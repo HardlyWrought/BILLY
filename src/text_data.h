@@ -1,64 +1,67 @@
+#define MAX_TEXT_LEN 5000
 /******************************************************************************/
 
-/*********************TEXT CLEANING FUNCTIONS**********************************/
+/******************CHARACTER COMPARE FUNCTIONS*********************************/
 
 /******************************************************************************/
-void Strip_Chars(char *text, int (*Compare_Func)(const char));
+int Is_Punctuation(const char ch);
 /******************************************************************************/
-void Leave_Chars(char *text, int (*Compare_Func)(const char));
+int Is_Stop_Character(const char ch);
 /******************************************************************************/
-void Strip_Words(char *text, int (*Compare_Func)(const char *));
+int Is_Whitespace (const char ch);
 /******************************************************************************/
-void Strip_Leading_Whitespace (char *text);
+int Is_Alphabetic(const char ch);
 /******************************************************************************/
-void Strip_Trailing_Whitespace (char *text);
+int Is_Alphanumeric(const char ch);
 /******************************************************************************/
-void Strip_Double_Whitespace(char *text);
+int Is_Part_Of_Word(const char ch);
 /******************************************************************************/
-void Convert_Whitespace_To_Space(char *text);
+int Is_Digit(const char ch);
 /******************************************************************************/
-void Normalize_Whitespace(char *text);
+int Is_Lowercase_Letter(const char ch);
 /******************************************************************************/
-void Strip_Last_Char(char *text);
-/******************************************************************************/
-
-/******************TEXT CREATE/DESTROY FUNCTIONS*******************************/
-
-/******************************************************************************/
-char **Create_Matrix_Chars(int rows, int columns);
-/******************************************************************************/
-char **Divide_Text_Words(const char *text);
-/******************************************************************************/
-void Destroy_Divided_Text(char **text);
+int Is_Capital_Letter(const char ch);
 /******************************************************************************/
 
-/*********************CHARACTER MANIP FUNCTIONS********************************/
+/******************WORD COMPARE FUNCTIONS**************************************/
 
 /******************************************************************************/
-char Convert_Char_Lowercase(char ch);
+int Is_Same(const char *input, const char *reference);
+/******************************************************************************/
+int Is_Stop_Word(const char *word);
+/******************************************************************************/
+int Is_Number(const char *word);
+/******************************************************************************/
+int Is_One_Character(const char *word);
+/******************************************************************************/
+int Is_One_Letter_Word(const char *word);
+/******************************************************************************/
+int Has_Char(const char *text, const char ch);
+/******************************************************************************/
+int Ends_In_Char(const char *word, const char ch);
+/******************************************************************************/
+int Has_Suffix(const char *word, const char *suffix);
+/******************************************************************************/
+int Get_Chars_In_Text(const char *input, const char *reference);
+/******************************************************************************/
+int Get_Chars_Not_In_Text(const char *input, const char *reference);
 /******************************************************************************/
 
-/*********************WORD MANIP FUNCTIONS*************************************/
+/******************TEXT COMPARE FUNCTIONS**************************************/
 
 /******************************************************************************/
-void Append_Word(char *text, const char *word);
+int Is_In_Text(const char *text, const char *reference);
 /******************************************************************************/
 
-/*********************TEXT MANIP FUNCTIONS*************************************/
+/********************TEXT DATA FUNCTIONS***************************************/
 
 /******************************************************************************/
-void Constrain_Text_Length(char *text, int length);
+int Get_Num_Char(const char *text, const char ch);
 /******************************************************************************/
-void Copy_Text(char *destination, const char *source);
+int Get_Num_Delimiters(const char *text);
 /******************************************************************************/
-void Append_Text(char *destination, const char *source);
+int Get_Num_Words(const char *text);
 /******************************************************************************/
-void Convert_Text_Lowercase(char *text);
+int Get_Text_Length(const char *text);
 /******************************************************************************/
-void Delete_Text(char *text);
-/******************************************************************************/
-char *Tokenize_Text(char *text, char *delim, char **save_ptr);
-/******************************************************************************/
-void Clean_Text(char *text);
-/******************************************************************************/
-int Get_Length_Longest_Word(const char *text);
+

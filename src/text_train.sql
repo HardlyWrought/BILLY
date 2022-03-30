@@ -65,23 +65,23 @@ END TRANSACTION;
 
 CREATE TABLE "emission"
 AS SELECT "word", "tag", "odds"
-FROM "emissions"
-WHERE "odds" > .01 AND "total" > 5 ORDER BY "total" DESC, "word" DESC, "odds" DESC, "tag" DESC;
+FROM "emission_count"
+WHERE "odds" > .001 AND "total" > 5
+ORDER BY "total" DESC, "word" DESC, "odds" DESC, "tag" DESC;
 
 CREATE TABLE "transition"
 AS SELECT "tag", "next_tag", "odds"
-FROM "transitions"
-WHERE "odds" > .001 ORDER BY "total" DESC, "tag" DESC, "odds" DESC, "next_tag" DESC;
+FROM "transition_count"
+WHERE "odds" > .001
+ORDER BY "total" DESC, "tag" DESC, "odds" DESC, "next_tag" DESC;
 
 DROP TABLE "emission_count";
 DROP TABLE "transition_count";
 
 
 BEGIN TRANSACTION;
-UPDATE "emission"   SET "odds" = ROUND("odds", 4);
-UPDATE "transition" SET "odds" = ROUND("odds", 4);
-UPDATE "emission"   SET "odds" = 1.0 WHERE "odds" >= .99;
-UPDATE "transition" SET "odds" = 1.0 WHERE "odds" >= .999;
+UPDATE "emission"   SET "odds" = ROUND("odds", 5);
+UPDATE "transition" SET "odds" = ROUND("odds", 5);
 END TRANSACTION;
 
 BEGIN TRANSACTION;

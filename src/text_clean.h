@@ -62,3 +62,4 @@ char *Tokenize_Text(char *text, char *delim, char **save_ptr);
 void Clean_Text(char *text);
 /******************************************************************************/
 int Get_Length_Longest_Word(const char *text);
+/******************************************************************************/

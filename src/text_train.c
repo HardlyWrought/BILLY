@@ -18,28 +18,25 @@ void Close_Database()
 {
   sqlite3_close(db);
 }
-/******************************************************************************/
+/******************************************************************************
 void Expand_Contractions(char *word)
 {
-  if (Is_Same(word, "n't"))
+  char *contraction[] = {"n't, 've,  're, 'll",  NULL};
+  char *expanded[]    = {"not, have, are, will"};
+  
+  int i = 0;
+  
+  while (*contraction)
   {
-    Copy_Text(word, "not");
-  }
-  else if (Is_Same(word, "'ve"))
-  {
-    Copy_Text(word, "have");
-  }
-  else if (Is_Same(word, "'re"))
-  {
-    Copy_Text(word, "are");
-  }
-  else if (Is_Same(word, "'ll"))
-  {
-    Copy_Text(word, "will");
+    if (Is_Same(word, contraction[i]))
+    {
+      Copy_Text(expanded[i], word);
+	}
+	i++;
   }
   return;
 }
-/******************************************************************************/
+******************************************************************************/
 int Record_Exists(const char *table, const char *column, const char *record)
 {
   char buffer[MAX_STMT_LEN] = {0};
@@ -153,7 +150,7 @@ void Insert_Row(const char *table, const char *col_1, const char *col_2,
 }
 /******************************************************************************/
 void Increment_Count(const char *table, const char *col_1, const char *col_2,
-                                       const char *val_1, const char *val_2)
+                                        const char *val_1, const char *val_2)
 {
   char buffer[MAX_STMT_LEN] = {0};
 
@@ -247,15 +244,15 @@ void Split_Token(char *buffer, char *word, char *tag)
 /******************************************************************************/
 int Train_Tagger(const char *filepath)
 {
-  FILE *text_file = fopen(filepath, "r");
+  FILE *tagged_text_file = fopen(filepath, "r");
       
   Execute_SQL("BEGIN TRANSACTION");
 
-  Build_Database(text_file);
+  Build_Database(tagged_text_file);
   
   Execute_SQL("END TRANSACTION");
   
-  fclose(text_file);
+  fclose(tagged_text_file);
   return 55;
 }
 /******************************************************************************/
@@ -265,7 +262,7 @@ int Is_Clean_Word(char *word)
       Is_Alphabetic(word[0]))
   {
 	Constrain_Text_Length(word, MAX_WORD_LEN);
-    Expand_Contractions(word);
+    //Expand_Contractions(word);
     Leave_Chars(word, Is_Alphabetic);
     Convert_Text_Lowercase(word);
     
@@ -344,16 +341,13 @@ void Improperize_Noun(char *tag)
 /******************************************************************************/
 void Tag_Single_Letter_Word(const char *word, char *tag)
 {
-  if (Is_One_Letter_Word(word))
+  if (Is_Same(word, "i"))
   {
-    if (Is_Same(word, "i"))
-    {
-      Copy_Text(tag, "PRP");
-	}
-	else if (Is_Same(word, "a"))
-    {
-      Copy_Text(tag, "DT");
-	}
+    Copy_Text(tag, "PRP");
+  }
+  else if (Is_Same(word, "a"))
+  {
+    Copy_Text(tag, "DT");
   }
   return;
 }
@@ -369,6 +363,7 @@ int Tag_End_Of_Sentence(const char *tagged_text, char *prev_tag)
 	
   if (Is_End_Of_Sentence(tagged_text))
   {
+	Add_Tag_To_Dict(prev_tag);
     Increment_Count("\"transition_count\"","\"tag\"", "\"next_tag\"", prev_tag, "X");
     Increment_Total("\"transition_count\"","\"tag\"", prev_tag);
     Copy_Text(prev_tag, "X");
@@ -401,11 +396,11 @@ void Tag_Word(char *tagged_text, char *prev_tag)
   return;
 }
 /******************************************************************************/
-void Build_Database(FILE *file)
+void Build_Database(FILE *tagged_text_file)
 {
   char sentence[MAX_TEXT_LEN] = {0};
 	
-  while (fgets(sentence, MAX_TEXT_LEN-1, file))
+  while (fgets(sentence, MAX_TEXT_LEN-1, tagged_text_file))
   {
 	Constrain_Text_Length(sentence, MAX_TEXT_LEN);
 	

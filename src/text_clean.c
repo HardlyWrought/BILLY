@@ -132,13 +132,16 @@ void Strip_Last_Char(char *text)
 
 /******************************************************************************/
 char **Create_Matrix_Chars(int rows, int columns)
-{	
+{ //memory block to hold each character
   char  *value   = malloc(rows * columns * sizeof(char));
+  //pointers to beginning of each word
   char **row_ptr = malloc(rows * sizeof(char *));
 
   for (int i = 0; i < rows; ++i)
   {
-    row_ptr[i]  = value + (i * columns);
+	 //set word pointer to the actual word
+     row_ptr[i] = value + (i * columns);
+     //set each word to empty (first character NULL)
     *row_ptr[i] = '\0';
   }
   return row_ptr;
@@ -162,6 +165,36 @@ char **Divide_Text_Words(const char *text)
     Copy_Text(word[i], token[i]);
   }
   return word;
+}
+/******************************************************************************/
+char *Tokenize_Text(char *text, char *delim, char **save_ptr)
+{
+  if (!text)
+  {
+    text = *save_ptr;
+  }
+  if (*text == '\0')
+  {
+    *save_ptr = text;
+    return NULL;
+  }
+  text += Get_Chars_In_Text(text, delim);
+  
+  if (*text == '\0')
+  {
+    *save_ptr = text;
+    return NULL;
+  }
+  char *end = text + Get_Chars_Not_In_Text(text, delim);
+  
+  if (*end == '\0')
+  {
+    *save_ptr = end;
+    return text;
+  }
+  *end = '\0';
+  *save_ptr = end + 1;
+  return text;
 }
 /******************************************************************************/
 void Destroy_Divided_Text(char **text)
@@ -248,38 +281,9 @@ void Append_Text(char *destination, const char *source)
   }
 }
 /******************************************************************************/
-char *Tokenize_Text(char *text, char *delim, char **save_ptr)
-{
-  if (!text) {
-    text = *save_ptr;
-  }
-  if (*text == '\0') {
-    *save_ptr = text;
-    return NULL;
-  }
-  text += Get_Chars_In_Text(text, delim);
-  
-  if (*text == '\0') {
-    *save_ptr = text;
-    return NULL;
-  }
-  char *end = text + Get_Chars_Not_In_Text(text, delim);
-  
-  if (*end == '\0') {
-    *save_ptr = end;
-    return text;
-  }
-  *end = '\0';
-  *save_ptr = end + 1;
-  return text;
-}
-/******************************************************************************/
 void Delete_Text(char *text)
 {
-  for (int i = Get_Text_Length(text); i > 0; i--)
-  {
-    text[i-1] = '\0';
-  }
+  text[0] = '\0';
 }
 /******************************************************************************/
 void Clean_Text(char *text)
@@ -290,7 +294,6 @@ void Clean_Text(char *text)
   Strip_Words(text, Is_Number);
 }
 /******************************************************************************/
-
 int Get_Length_Longest_Word(const char *text)
 {
   char *delimiters = " \t\r\n\v\f";

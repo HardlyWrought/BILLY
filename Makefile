@@ -9,12 +9,26 @@ RM = rm
 
 
 all:
-	make text_clean; make snow_stem; make text_train
+	make text_clean; make snow_stem; make text_train; make text_tag
 
 clean_all:
-	make clean_text_data; make clean_text_clean; make clean_snow_stem; make clean_text_train 
+	make clean_text_data; make clean_text_clean; make clean_snow_stem; make clean_text_train; make clean_text_tag
 
-	
+
+
+text_tag: text_tag_main.o text_tag.o text_clean.o text_data.o
+	$(CC) $(CFLAGS) -o bin/text_tag obj/text_tag_main.o obj/text_tag.o obj/text_clean.o obj/text_data.o -lsqlite3
+
+clean_text_tag:
+	$(RM) bin/text_tag obj/text_tag.o obj/text_tag_main.o
+
+text_tag_main.o: src/text_tag_main.c src/text_tag.h src/text_clean.c src/text_clean.h src/text_data.c src/text_data.h
+	$(CC) $(CFLAGS) -o obj/text_tag_main.o -c src/text_tag_main.c
+
+text_tag.o: src/text_tag.c src/text_tag.h src/text_clean.c src/text_clean.h src/text_data.c src/text_data.h
+	$(CC) $(CFLAGS) -o obj/text_tag.o -c src/text_tag.c
+
+
 
 text_train: text_train_main.o text_train.o text_clean.o text_data.o
 	$(CC) $(CFLAGS) -o bin/text_train obj/text_train_main.o obj/text_train.o obj/text_clean.o obj/text_data.o -lsqlite3

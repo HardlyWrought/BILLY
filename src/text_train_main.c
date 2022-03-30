@@ -2,7 +2,7 @@
 
 int main(int argc, char **argv)
 {
-  Open_Database("data/db/training_dict.db");
+  Open_Database("data/db/training_dict_TEST.db");
   	
   for (int i = 1; i < argc; i++)
   { 

@@ -39,7 +39,7 @@ int Is_Alphanumeric(const char ch)
 /******************************************************************************/
 int Is_Part_Of_Word(const char ch)
 {
-  return (Is_Alphanumeric(ch) || Is_Whitespace(ch) || ch == '\'');
+  return (Is_Alphanumeric(ch) || Is_Whitespace(ch));
 }
 /******************************************************************************/
 int Is_Lowercase_Letter(const char ch)
@@ -52,6 +52,7 @@ int Is_Capital_Letter(const char ch)
   return (ch >= 'A' && ch <= 'Z');
 }
 /******************************************************************************/
+
 
 /******************WORD COMPARE FUNCTIONS**************************************/
 
@@ -215,45 +216,27 @@ int Get_Num_Char(const char *text, const char ch)
   {  
     if (text[i] == ch)
     {
-      ++num_of_char;
+      num_of_char++;
     }
   }
   return num_of_char;
 }
 /******************************************************************************/
-int Get_Num_Delimiters(const char *text)
-{	
-  int text_length = Get_Text_Length(text);
-  int num_of_delimiters = 0;
-  
-  for (int i = 0; i < text_length; ++i)
-  {  
-    if (Is_Whitespace(text[i]))
-    {
-      if (!Is_Whitespace(text[i + 1]))
-      {  
-        ++num_of_delimiters;
-      }
-    }
-  }  
-  return num_of_delimiters;
-}
-/******************************************************************************/
 int Get_Num_Words(const char *text)
 {
   int text_length = Get_Text_Length(text);
-  int num_of_words = Get_Num_Delimiters(text) + 1;
-  
-  if (num_of_words > 1)
+  int num_of_words = 0;
+
+  if (text && !Is_Whitespace(text[0]))
   {
-    if (Is_Whitespace(*text))
+    num_of_words++;
+  }
+  for (int i = 1;  i < text_length; i++)
+  {
+    if (Is_Whitespace(text[i-1]) && !Is_Whitespace(text[i]))
     {
-	  --num_of_words;
-	}
-	if (Is_Whitespace(text[text_length - 1]))
-	{
-	  --num_of_words;
-	}
+      num_of_words++;
+    }
   }
   return num_of_words;
 }
